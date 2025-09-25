@@ -18,31 +18,13 @@ html, body {
   overflow-x: hidden;
 }
 
-/* Proteções Anti-Cópia */
+/* Melhorar interação touch */
 * {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
-}
-
-/* Desabilitar arrastar imagens */
-img {
-  -webkit-user-drag: none;
-  -khtml-user-drag: none;
-  -moz-user-drag: none;
-  -o-user-drag: none;
-  user-drag: none;
 }
 
 /* Permitir interação com botões e links */
 .btn, a, button {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
   pointer-events: auto;
   cursor: pointer;
 }
