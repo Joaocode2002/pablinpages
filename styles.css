@@ -304,10 +304,10 @@ body {
   background: var(--accent);
   color: white;
   border: none;
-  padding: 15px 20px;
+  padding: 7px 10px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 1.2rem;
+  font-size: 0.6rem;
   transition: all 0.3s ease;
   z-index: 10;
 }
@@ -331,8 +331,8 @@ body {
 }
 
 .nav-icon {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 0.9rem;
+  height: 0.9rem;
   color: #fff;
   display: block;
 }
