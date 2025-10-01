@@ -17,8 +17,7 @@
     <!-- Header Fixo -->
     <header class="fixed-header">
       <div class="header-content">
-        <span class="header-text">ULTIMAS VAGAS</span>
-        <div class="header-pulse"></div>
+        <span class="header-text">ÚLTIMAS VAGAS</span>
       </div>
     </header>
 
@@ -412,7 +411,6 @@
 
       // Header fixo - funcionalidade adicional
       const fixedHeader = document.querySelector('.fixed-header');
-      const headerText = document.querySelector('.header-text');
       
       // Efeito de destaque no scroll
       let lastScrollY = window.scrollY;
@@ -428,23 +426,6 @@
         }
         
         lastScrollY = currentScrollY;
-      });
-
-      // Efeito de clique no header
-      fixedHeader.addEventListener('click', () => {
-        headerText.style.transform = 'scale(1.1)';
-        setTimeout(() => {
-          headerText.style.transform = 'scale(1)';
-        }, 200);
-      });
-
-      // Adicionar efeito de hover no header
-      fixedHeader.addEventListener('mouseenter', () => {
-        fixedHeader.style.transform = 'translateY(2px)';
-      });
-
-      fixedHeader.addEventListener('mouseleave', () => {
-        fixedHeader.style.transform = 'translateY(0)';
       });
     </script>
   <!-- WhatsApp Floating Button -->
