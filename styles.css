@@ -621,4 +621,137 @@ body {
   transition: transform 0.3s ease;
 }
 
+/* Header Fixo */
+.fixed-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1001;
+  background: linear-gradient(90deg, #ff3131 0%, #ff6b6b 50%, #ff3131 100%);
+  padding: 8px 0;
+  box-shadow: 0 4px 20px rgba(255, 49, 49, 0.3);
+  animation: headerSlide 0.8s ease-out;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.fixed-header:hover {
+  box-shadow: 0 6px 25px rgba(255, 49, 49, 0.4);
+}
+
+.fixed-header.header-scrolled {
+  background: linear-gradient(90deg, #e02828 0%, #ff5252 50%, #e02828 100%);
+  box-shadow: 0 6px 25px rgba(255, 49, 49, 0.5);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.header-text {
+  color: white;
+  font-family: "Chakra Petch", Montserrat, Poppins, sans-serif;
+  font-weight: 700;
+  font-size: clamp(14px, 2.5vw, 18px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+.header-pulse {
+  position: absolute;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Animações do Header */
+@keyframes headerSlide {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Ajustar padding do body para compensar o header fixo */
+body {
+  padding-top: 50px;
+}
+
+/* Responsividade do Header */
+@media (max-width: 768px) {
+  .fixed-header {
+    padding: 6px 0;
+  }
+  
+  .header-content {
+    padding: 0 15px;
+  }
+  
+  .header-pulse {
+    right: 15px;
+    width: 10px;
+    height: 10px;
+  }
+  
+  body {
+    padding-top: 45px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-text {
+    font-size: 12px;
+  }
+  
+  .header-pulse {
+    width: 8px;
+    height: 8px;
+  }
+  
+  body {
+    padding-top: 40px;
+  }
+}
+
 

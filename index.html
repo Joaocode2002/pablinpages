@@ -14,6 +14,14 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <!-- Header Fixo -->
+    <header class="fixed-header">
+      <div class="header-content">
+        <span class="header-text">ULTIMAS VAGAS</span>
+        <div class="header-pulse"></div>
+      </div>
+    </header>
+
     <main>
       <!-- HERO -->
       <section id="hero" class="section hero reveal revealed">
@@ -219,7 +227,7 @@
       <section id="ofertas" class="section offers reveal">
         <div class="container">
           <div class="offers-header">
-            <h2 class="section-title gradient-text">Participe da nossa comunidade gratuita!</h2>
+            <h2 class="section-title gradient-text">Adquira hoje e ganhe</h2>
           </div>
           <div class="offers-grid">
             <article class="offer-card">
@@ -401,6 +409,43 @@
       document.querySelectorAll('.reveal').forEach((el) => {
         scrollObserver.observe(el);
       });
+
+      // Header fixo - funcionalidade adicional
+      const fixedHeader = document.querySelector('.fixed-header');
+      const headerText = document.querySelector('.header-text');
+      
+      // Efeito de destaque no scroll
+      let lastScrollY = window.scrollY;
+      
+      window.addEventListener('scroll', () => {
+        const currentScrollY = window.scrollY;
+        
+        // Adicionar classe quando scroll para baixo
+        if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          fixedHeader.classList.add('header-scrolled');
+        } else {
+          fixedHeader.classList.remove('header-scrolled');
+        }
+        
+        lastScrollY = currentScrollY;
+      });
+
+      // Efeito de clique no header
+      fixedHeader.addEventListener('click', () => {
+        headerText.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          headerText.style.transform = 'scale(1)';
+        }, 200);
+      });
+
+      // Adicionar efeito de hover no header
+      fixedHeader.addEventListener('mouseenter', () => {
+        fixedHeader.style.transform = 'translateY(2px)';
+      });
+
+      fixedHeader.addEventListener('mouseleave', () => {
+        fixedHeader.style.transform = 'translateY(0)';
+      });
     </script>
   <!-- WhatsApp Floating Button -->
   <a href="https://wa.me/553197712920?text=Quero%20saber%20mais%20sobre%20o%20mercado%20de%20delay%20esportivos%20e%20métodos!" 
@@ -427,7 +472,5 @@
 
   </body>
 </html>
-
-
 
 
