@@ -79,9 +79,24 @@ body {
 .btn-primary {
   background: linear-gradient(90deg, #734eff 0%, #5e17eb 100%);
   box-shadow: 0 8px 20px rgba(115, 78, 255, .35);
+  animation: buttonPulse 2s ease-in-out infinite;
 }
-.btn-primary:hover { filter: brightness(1.06); }
-.btn-secondary { background: rgba(115, 78, 255, .1); border: 1px solid rgba(115, 78, 255, .4); }
+.btn-primary:hover { 
+  filter: brightness(1.06);
+  animation: none;
+  transform: scale(1.05);
+}
+.btn-secondary { 
+  background: rgba(115, 78, 255, .1); 
+  border: 1px solid rgba(115, 78, 255, .4);
+  animation: buttonPulseSecondary 2.5s ease-in-out infinite;
+}
+.btn-secondary:hover {
+  animation: none;
+  transform: scale(1.05);
+  background: rgba(115, 78, 255, .2);
+  border-color: rgba(115, 78, 255, .6);
+}
 .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,.2); color: #fff; }
 .btn-outline:hover { background: rgba(255,255,255,.08); }
 .btn-block { width: 100%; }
@@ -310,6 +325,7 @@ body {
   font-size: 0.6rem;
   transition: all 0.3s ease;
   z-index: 10;
+  animation: carouselButtonPulse 3s ease-in-out infinite;
 }
 
 .prev {
@@ -323,6 +339,7 @@ body {
 .prev:hover, .next:hover {
   background: var(--accent-2);
   transform: translateY(-50%) scale(1.1);
+  animation: none;
 }
 
 .prev:focus, .next:focus {
@@ -628,21 +645,21 @@ body {
   left: 0;
   right: 0;
   z-index: 1001;
-  background: linear-gradient(90deg, #ff3131 0%, #ff6b6b 50%, #ff3131 100%);
+  background: linear-gradient(90deg, #5e17eb 0%, #734eff 50%, #5e17eb 100%);
   padding: 8px 0;
-  box-shadow: 0 4px 20px rgba(255, 49, 49, 0.3);
+  box-shadow: 0 4px 20px rgba(94, 23, 235, 0.3);
   animation: headerSlide 0.8s ease-out;
   transition: all 0.3s ease;
   cursor: pointer;
 }
 
 .fixed-header:hover {
-  box-shadow: 0 6px 25px rgba(255, 49, 49, 0.4);
+  box-shadow: 0 6px 25px rgba(94, 23, 235, 0.4);
 }
 
 .fixed-header.header-scrolled {
-  background: linear-gradient(90deg, #e02828 0%, #ff5252 50%, #e02828 100%);
-  box-shadow: 0 6px 25px rgba(255, 49, 49, 0.5);
+  background: linear-gradient(90deg, #4a1399 0%, #5e17eb 50%, #4a1399 100%);
+  box-shadow: 0 6px 25px rgba(94, 23, 235, 0.5);
 }
 
 .header-content {
@@ -653,17 +670,20 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  width: 100%;
 }
 
 .header-text {
   color: white;
   font-family: "Chakra Petch", Montserrat, Poppins, sans-serif;
   font-weight: 700;
-  font-size: clamp(14px, 2.5vw, 18px);
+  font-size: clamp(18px, 3.5vw, 24px);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   animation: textPulse 2s ease-in-out infinite;
+  text-align: center;
+  flex: 1;
 }
 
 .header-pulse {
@@ -710,6 +730,40 @@ body {
   100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+/* Animações dos Botões */
+@keyframes buttonPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 8px 20px rgba(115, 78, 255, .35);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 12px 30px rgba(115, 78, 255, .5);
+  }
+}
+
+@keyframes buttonPulseSecondary {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(115, 78, 255, .2);
+  }
+  50% {
+    transform: scale(1.01);
+    box-shadow: 0 8px 25px rgba(115, 78, 255, .3);
+  }
+}
+
+@keyframes carouselButtonPulse {
+  0%, 100% {
+    transform: translateY(-50%) scale(1);
+    box-shadow: 0 4px 15px rgba(94, 23, 235, .3);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 20px rgba(94, 23, 235, .5);
   }
 }
 
