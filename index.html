@@ -102,22 +102,368 @@
       <!-- SEÇÃO DE VÍDEO -->
       <section id="video" class="section video-section reveal">
         <div class="container">
+          <!-- PLAYER DE VÍDEO COMPLETO -->
+          <style>
+            /* CSS do Player de Vídeo */
+            .video-container {
+              text-align: center;
+              margin: 20px 0 0px 0;
+            }
+
+            /* Player customizado */
+            .custom-video-player {
+              position: relative;
+              width: 100%;
+              max-width: 500px;
+              margin: 0 auto;
+              background: #000;
+              border-radius: 10px;
+              overflow: hidden;
+              box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+              /* Forçar container fixo */
+              contain: layout style paint;
+              isolation: isolate;
+            }
+
+            #main-video {
+              width: 100% !important;
+              height: auto !important;
+              max-width: 100% !important;
+              max-height: 100% !important;
+              display: block !important;
+              object-fit: contain !important;
+              transform: none !important;
+              zoom: 1 !important;
+              scale: 1 !important;
+              position: relative !important;
+              z-index: 1 !important;
+              /* Forçar dimensões fixas */
+              min-width: 0 !important;
+              min-height: 0 !important;
+              /* Prevenir zoom e fullscreen */
+              -webkit-transform: none !important;
+              -moz-transform: none !important;
+              -ms-transform: none !important;
+              -o-transform: none !important;
+            }
+
+            .video-overlay {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.3);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              opacity: 1;
+              transition: opacity 0.3s ease;
+              z-index: 2;
+            }
+
+            .video-overlay.hidden {
+              opacity: 0;
+              pointer-events: none;
+            }
+
+            .sound-message {
+              position: absolute;
+              bottom: 20px;
+              left: 50%;
+              transform: translateX(-50%);
+              background: rgba(0, 0, 0, 0.8);
+              padding: 8px 16px;
+              border-radius: 20px;
+              opacity: 0;
+              transition: opacity 0.3s ease;
+              pointer-events: none;
+            }
+
+            .sound-message.show {
+              opacity: 1;
+            }
+
+            .sound-text {
+              color: white;
+              font-size: 14px;
+              font-family: 'Chakra Petch', 'Arial', sans-serif;
+              text-align: center;
+              white-space: nowrap;
+            }
+
+            /* Overlay de ativação de som */
+            .sound-activation-overlay {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.7);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              opacity: 1;
+              transition: opacity 0.5s ease;
+              z-index: 10;
+              cursor: pointer;
+              /* Garantir que apareça por padrão */
+              visibility: visible !important;
+            }
+
+            /* Mostrar overlay de som em todos os dispositivos */
+            @media (min-width: 769px) {
+              .sound-activation-overlay {
+                display: flex !important;
+              }
+            }
+
+            .sound-activation-overlay.hidden {
+              opacity: 0;
+              pointer-events: none;
+              visibility: hidden;
+            }
+
+            .sound-activation-message {
+              text-align: center;
+              color: white;
+              padding: 20px;
+              border-radius: 15px;
+              background: rgba(0, 0, 0, 0.8);
+              border: 2px solid #ff6b6b;
+              animation: pulse 2s infinite;
+            }
+
+            .sound-icon {
+              font-size: 50px;
+              margin-bottom: 15px;
+            }
+
+            .sound-text-large {
+              font-size: 18px;
+              font-family: 'Chakra Petch', 'Arial', sans-serif;
+              font-weight: 600;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+
+            @keyframes pulse {
+              0% { transform: scale(1); }
+              50% { transform: scale(1.05); }
+              100% { transform: scale(1); }
+            }
+
+            .video-controls {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+              padding: 20px 15px 15px;
+              opacity: 0;
+              transition: opacity 0.3s ease;
+              z-index: 3;
+            }
+
+            .custom-video-player:hover .video-controls {
+              opacity: 1;
+            }
+
+            .progress-container {
+              margin-bottom: 10px;
+            }
+
+            .progress-bar {
+              width: 100%;
+              height: 4px;
+              background: rgba(255, 255, 255, 0.3);
+              border-radius: 2px;
+              cursor: pointer;
+              position: relative;
+            }
+
+            .progress-fill {
+              height: 100%;
+              background: #ff6b6b;
+              border-radius: 2px;
+              width: 0%;
+              transition: width 0.1s ease;
+            }
+
+            .controls-row {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            }
+
+            .control-btn {
+              background: none;
+              border: none;
+              color: white;
+              font-size: 18px;
+              cursor: pointer;
+              padding: 5px;
+              border-radius: 3px;
+              transition: background 0.2s ease;
+            }
+
+            .control-btn:hover {
+              background: rgba(255, 255, 255, 0.2);
+            }
+
+            .time-display {
+              color: white;
+              font-size: 14px;
+              font-family: 'Chakra Petch', 'Arial', sans-serif;
+              margin: 0 10px;
+            }
+
+            .volume-container {
+              flex: 1;
+              display: flex;
+              align-items: center;
+            }
+
+            .volume-slider {
+              width: 100%;
+              height: 4px;
+              background: rgba(255, 255, 255, 0.3);
+              border-radius: 2px;
+              outline: none;
+              cursor: pointer;
+            }
+
+            .volume-slider::-webkit-slider-thumb {
+              appearance: none;
+              width: 12px;
+              height: 12px;
+              background: #ff6b6b;
+              border-radius: 50%;
+              cursor: pointer;
+            }
+
+            .volume-slider::-moz-range-thumb {
+              width: 12px;
+              height: 12px;
+              background: #ff6b6b;
+              border-radius: 50%;
+              border: none;
+              cursor: pointer;
+            }
+
+            /* Esconder botão de tela cheia */
+            #main-video::-webkit-media-controls-fullscreen-button {
+              display: none !important;
+            }
+
+            #main-video::-webkit-media-controls {
+              overflow: visible !important;
+            }
+
+            /* Para Firefox */
+            #main-video::-moz-media-controls-fullscreen-button {
+              display: none !important;
+            }
+
+            /* Responsividade para mobile */
+            @media (max-width: 768px) {
+              .custom-video-player {
+                max-width: 100%;
+                /* Forçar container fixo no mobile */
+                position: relative !important;
+                overflow: hidden !important;
+                contain: layout style paint !important;
+              }
+              
+              #main-video {
+                /* Forçar vídeo a ficar dentro do container no mobile */
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+                max-height: 100% !important;
+                object-fit: contain !important;
+                position: relative !important;
+                z-index: 1 !important;
+                /* Prevenir qualquer zoom ou transformação */
+                transform: none !important;
+                -webkit-transform: none !important;
+                -moz-transform: none !important;
+                -ms-transform: none !important;
+                -o-transform: none !important;
+                /* Forçar dimensões */
+                min-width: 0 !important;
+                min-height: 0 !important;
+                /* Prevenir fullscreen nativo */
+                -webkit-playsinline: true !important;
+                playsinline: true !important;
+              }
+              
+              .video-controls {
+                padding: 15px 10px 10px;
+              }
+              
+              .control-btn {
+                font-size: 16px;
+              }
+              
+              .time-display {
+                font-size: 12px;
+              }
+              
+              .sound-text {
+                font-size: 12px;
+                padding: 6px 12px;
+              }
+              
+              .sound-activation-message {
+                padding: 15px;
+              }
+              
+              .sound-icon {
+                font-size: 40px;
+                margin-bottom: 10px;
+              }
+              
+              .sound-text-large {
+                font-size: 16px;
+              }
+            }
+          </style>
+
+          <!-- HTML do Player -->
           <div class="video-container">
-            <div class="video-wrapper">
-              <iframe 
-                src="video1.mp4" 
-                title="Vídeo explicativo da metodologia Ghost Community"
-                frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-              </iframe>
-              <div class="video-placeholder">
-                <div class="play-button">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M8 5v14l11-7z" fill="currentColor"/>
-                  </svg>
+            <div class="custom-video-player" id="custom-player">
+              <video id="main-video" preload="metadata" muted playsinline webkit-playsinline autoplay>
+                <source src="video1.mp4" type="video/mp4">
+                Seu navegador não suporta o elemento de vídeo.
+              </video>
+              <div class="video-overlay">
+                <div class="sound-message" id="sound-message">
+                  <div class="sound-text">🔊 Toque para ativar o som</div>
                 </div>
-                <p>Clique para reproduzir o vídeo</p>
+              </div>
+              <div class="sound-activation-overlay" id="sound-activation-overlay">
+                <div class="sound-activation-message">
+                  <div class="sound-icon">🔊</div>
+                  <div class="sound-text-large">Toque para ativar o som</div>
+                </div>
+              </div>
+              <div class="video-controls">
+                <div class="progress-container">
+                  <div class="progress-bar" id="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                  </div>
+                </div>
+                <div class="controls-row">
+                  <button class="control-btn" id="play-pause-btn">▶</button>
+                  <div class="time-display">
+                    <span id="current-time">0:00</span> / <span id="duration">0:00</span>
+                  </div>
+                  <button class="control-btn" id="mute-btn">🔊</button>
+                  <div class="volume-container">
+                    <input type="range" class="volume-slider" id="volume-slider" min="0" max="100" value="100">
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -270,21 +616,245 @@
       }, { threshold: 0.14 });
       document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-      // Video functionality
-      const videoPlaceholder = document.querySelector('.video-placeholder');
-      const videoIframe = document.querySelector('.video-wrapper iframe');
-      
-      if (videoPlaceholder && videoIframe) {
-        // Remove placeholder when video loads
-        videoIframe.addEventListener('load', () => {
-          videoPlaceholder.style.display = 'none';
-        });
-        
-        // Fallback: remove placeholder after 2 seconds
-        setTimeout(() => {
-          videoPlaceholder.style.display = 'none';
-        }, 2000);
-      }
+      // JavaScript do Player de Vídeo
+      document.addEventListener('DOMContentLoaded', function() {
+        // Player customizado
+        const video = document.getElementById('main-video');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const muteBtn = document.getElementById('mute-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressFill = document.getElementById('progress-fill');
+        const volumeSlider = document.getElementById('volume-slider');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const videoOverlay = document.querySelector('.video-overlay');
+        const soundMessage = document.getElementById('sound-message');
+        const soundActivationOverlay = document.getElementById('sound-activation-overlay');
+
+        if (video) {
+          // Função para formatar tempo
+          function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+          }
+
+          // Função para atualizar progresso
+          function updateProgress() {
+            const progress = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+            currentTimeEl.textContent = formatTime(video.currentTime);
+          }
+
+          // Função para atualizar duração
+          function updateDuration() {
+            durationEl.textContent = formatTime(video.duration);
+          }
+
+          // Event listeners
+          video.addEventListener('loadedmetadata', updateDuration);
+          video.addEventListener('timeupdate', updateProgress);
+          video.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶';
+            videoOverlay.classList.remove('hidden');
+          });
+
+          // Play/Pause
+          function togglePlay() {
+            if (video.paused) {
+              video.muted = false; // Ativar áudio
+              video.play();
+              playPauseBtn.textContent = '⏸';
+              videoOverlay.classList.add('hidden');
+              soundMessage.classList.remove('show');
+            } else {
+              video.pause();
+              playPauseBtn.textContent = '▶';
+            }
+          }
+
+          playPauseBtn.addEventListener('click', togglePlay);
+
+          // Mute/Unmute
+          function toggleMute() {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? '🔇' : '🔊';
+            volumeSlider.value = video.muted ? 0 : video.volume * 100;
+            
+            // Mostrar mensagem de som no mobile quando mutado
+            if (window.innerWidth <= 768 && video.muted) {
+              soundMessage.classList.add('show');
+            } else {
+              soundMessage.classList.remove('show');
+            }
+          }
+
+          muteBtn.addEventListener('click', toggleMute);
+
+          // Volume
+          volumeSlider.addEventListener('input', function() {
+            video.volume = this.value / 100;
+            video.muted = this.value == 0;
+            muteBtn.textContent = video.muted ? '🔇' : '🔊';
+            
+            // Mostrar mensagem de som no mobile quando volume = 0
+            if (window.innerWidth <= 768 && this.value == 0) {
+              soundMessage.classList.add('show');
+            } else {
+              soundMessage.classList.remove('show');
+            }
+          });
+
+          // Progress bar
+          progressBar.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pos * video.duration;
+          });
+
+          // Iniciar vídeo automaticamente
+          function iniciarVideo() {
+            // Sempre iniciar mutado para garantir que o overlay apareça
+            video.muted = true;
+            video.volume = 1.0;
+            
+            // Mostrar overlay de som imediatamente
+            soundActivationOverlay.classList.remove('hidden');
+            
+            // Tentar autoplay mutado
+            const playPromise = video.play();
+            
+            if (playPromise !== undefined) {
+              playPromise.then(() => {
+                playPauseBtn.textContent = '⏸';
+                videoOverlay.classList.add('hidden');
+                soundMessage.classList.add('show');
+                // Garantir que o overlay de som esteja visível
+                soundActivationOverlay.classList.remove('hidden');
+                console.log('Vídeo iniciado automaticamente mutado');
+              }).catch(function(error) {
+                console.log('Autoplay bloqueado');
+                // Mesmo se não conseguir autoplay, mostrar overlay se estiver mutado
+                verificarSom();
+              });
+            } else {
+              // Se não houver promise, verificar som
+              verificarSom();
+            }
+          }
+
+          // Função para ativar som no primeiro toque
+          function ativarSom() {
+            video.muted = false;
+            soundMessage.classList.remove('show');
+            soundActivationOverlay.classList.add('hidden');
+            console.log('Som ativado');
+          }
+
+          // Mostrar overlay de ativação de som se o vídeo estiver mutado (em todos os dispositivos)
+          function verificarSom() {
+            if (video.muted) {
+              soundActivationOverlay.classList.remove('hidden');
+            } else {
+              soundActivationOverlay.classList.add('hidden');
+            }
+          }
+
+          // Forçar vídeo a ficar dentro do container (especialmente no mobile)
+          function forcarContainer() {
+            video.style.width = '100%';
+            video.style.maxWidth = '500px';
+            video.style.height = 'auto';
+            video.style.objectFit = 'contain';
+            video.style.transform = 'none';
+            video.style.zoom = '1';
+            video.style.scale = '1';
+            video.style.position = 'relative';
+            video.style.zIndex = '1';
+            video.style.minWidth = '0';
+            video.style.minHeight = '0';
+            // Forçar playsinline no mobile
+            video.setAttribute('playsinline', 'true');
+            video.setAttribute('webkit-playsinline', 'true');
+          }
+
+          // Aplicar forçamento de container
+          forcarContainer();
+          video.addEventListener('loadedmetadata', forcarContainer);
+          video.addEventListener('play', forcarContainer);
+          video.addEventListener('playing', forcarContainer);
+          video.addEventListener('loadstart', forcarContainer);
+          video.addEventListener('canplay', forcarContainer);
+
+          // Garantir que o overlay apareça se o vídeo estiver mutado
+          video.addEventListener('loadedmetadata', function() {
+            if (video.muted) {
+              soundActivationOverlay.classList.remove('hidden');
+            }
+          });
+
+          // Iniciar automaticamente quando carregar
+          video.addEventListener('loadedmetadata', function() {
+            setTimeout(iniciarVideo, 500); // Pequeno delay para garantir carregamento
+          });
+
+          // Event listener para o overlay de ativação de som
+          soundActivationOverlay.addEventListener('click', function() {
+            ativarSom();
+          });
+
+          soundActivationOverlay.addEventListener('touchstart', function() {
+            ativarSom();
+          });
+
+          // Eventos de toque para ativar som (em todos os dispositivos se estiver mutado)
+          document.addEventListener('touchstart', function() {
+            if (video.muted) {
+              ativarSom();
+            }
+          }, { once: true });
+          
+          document.addEventListener('click', function() {
+            if (video.muted) {
+              ativarSom();
+            }
+          }, { once: true });
+
+          // Verificar som quando o vídeo carregar
+          video.addEventListener('loadedmetadata', function() {
+            verificarSom();
+          });
+
+          // Verificar som imediatamente ao carregar a página
+          verificarSom();
+
+          // Proteções adicionais para mobile
+          if (window.innerWidth <= 768) {
+            // Prevenir zoom no vídeo
+            video.addEventListener('touchstart', function(e) {
+              e.preventDefault();
+              forcarContainer();
+            }, { passive: false });
+            
+            // Prevenir gestos de zoom
+            video.addEventListener('touchmove', function(e) {
+              if (e.touches.length > 1) {
+                e.preventDefault();
+              }
+            }, { passive: false });
+            
+            // Forçar container a cada mudança de orientação
+            window.addEventListener('orientationchange', function() {
+              setTimeout(forcarContainer, 500);
+            });
+            
+            // Forçar container quando a janela redimensionar
+            window.addEventListener('resize', function() {
+              setTimeout(forcarContainer, 100);
+            });
+          }
+        }
+      });
 
       // Carrossel de Métodos - Funcionalidade completa
       function initCarousel(carouselSelector) {
